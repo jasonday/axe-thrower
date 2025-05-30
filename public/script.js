@@ -84,72 +84,90 @@ violations.then(data => {
     </ul>
 
     <h3>URLs with Violations</h3>
-    <ul>
-      ${uniqueURLsWithViolations.map(url => `
-        <li>
-          <a href="${url}">${url}</a>
-        </li>
-      `).join('')}
-    </ul>
+    <details>
+      <summary>${uniqueURLsWithViolations.length} URLs</summary>
+       <ul>
+        ${uniqueURLsWithViolations.map(url => `
+          <li>
+            <a href="${url}">${url}</a>
+          </li>
+        `).join('')}
+      </ul>
+    </details>
+   
 
     <h2 id="violations">Accessibility Violations</h2>
     <div class="grid">
     ${violationTypes.map(type => `
       <article class="violations">
-        <h3>${toSentenceCase(replaceHyphensWithSpaces(type))}</h3>
-        <p>There are <strong>${violationVariables[type].length} ${type} violations</strong> across <strong>${uniqueURLsWithViolations.length} URLs</strong>.</p>
-        <p>Impact: <span class="impact impact--${violationVariables[type][0]['impact']}">${toSentenceCase(violationVariables[type][0]['impact'])}</span></p>
-        <p>Description: ${violationVariables[type][0]['description']}</p>
+          <h3>${toSentenceCase(replaceHyphensWithSpaces(type))}</h3>
+          <p></p>
+          <p>Impact: <span class="impact impact--${violationVariables[type][0]['impact']}">${toSentenceCase(violationVariables[type][0]['impact'])}</span></p>
+          <p>Description: ${escapeHtml(violationVariables[type][0]['description'])}</p>
+          <details>
+          <summary>There are <strong>${violationVariables[type].length} ${type} violations</strong> across <strong>${uniqueURLsWithViolations.length} URLs</strong>.</summary>
         <ol class="violations__list">
           ${violationVariables[type].map((violation, index) => `
             <li>
-              <a href="${violation.url}">${violation.url}</a>
-              <ul>
-                <li>Instances: ${violation.nodes.length} - <button data-index="${index}" data-type="${type}" class="view-violations" type="button">View All</button></li>
-              </ul>
+              <a id="link-${index}" class="view-violations" href="${violation.url}">${violation.url}</a>
+              <div>
+              <details>
+                        <summary aria-describedby="link-${index}">Instances: ${violation.nodes.length}</summary>
+                        <p><strong>Failure Summary:</strong> ${violation.nodes[0]['failureSummary']}</p>
+                        <ol>
+                          ${violation.nodes.map(node => `
+                            <li>
+                              <strong>HTML:</strong> <code>${escapeHtml(node.html)}</code><br>
+                              <strong>Target:</strong> ${node.target.join(' > ')}<br>
+                            </li>
+                          `).join('')}
+                          </ol>
+                      </details>
+              </div>
             </li>
           `).join('')}
         </ol>
+        </details>
       </article>
     `).join('')}
     </div>
   `;
 
   // Event listener for the view violations buttons
-  document.querySelectorAll('.view-violations').forEach(button => {
-    button.addEventListener('click', (event) => {
-      const type = event.target.getAttribute('data-type');
-      const index = event.target.getAttribute('data-index');
-      const violation = violationVariables[type][index];
-      const numberOfInstances = violation.nodes.length;
-      const violationSummary = violation.nodes[0]['failureSummary'];
-      dialogViolationsList.innerHTML = '';
-      dialogViolationsTitle.innerHTML = '';
+  // document.querySelectorAll('.view-violations').forEach(button => {
+  //   button.addEventListener('click', (event) => {
+  //     const type = event.target.getAttribute('data-type');
+  //     const index = event.target.getAttribute('data-index');
+  //     const violation = violationVariables[type][index];
+  //     const numberOfInstances = violation.nodes.length;
+  //     const violationSummary = violation.nodes[0]['failureSummary'];
+  //     dialogViolationsList.innerHTML = '';
+  //     dialogViolationsTitle.innerHTML = '';
 
-      dialogViolationsTitle.innerHTML = `
-        <h2>${numberOfInstances} ${toSentenceCase(replaceHyphensWithSpaces(type))} Violations</h2>
-        <p>URL: <a href="${violation.url}">${violation.url}</a></p>
-        <p>Summary: ${violationSummary}</p>
-      `;
+  //     dialogViolationsTitle.innerHTML = `
+  //       <h2>${numberOfInstances} ${toSentenceCase(replaceHyphensWithSpaces(type))} Violations</h2>
+  //       <p>URL: <a href="${violation.url}">${violation.url}</a></p>
+  //       <p>Summary: ${violationSummary}</p>
+  //     `;
 
-      violation.nodes.forEach(node => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `
-          <ul>
-            <li><strong>HTML:</strong> <code>${escapeHtml(node.html)}</code></li>
-            <li><strong>Target:</strong> ${node.target.join(' > ')}</li>
-          </ul>
-        `;
-        dialogViolationsList.appendChild(listItem);
-      });
+  //     violation.nodes.forEach(node => {
+  //       const listItem = document.createElement('li');
+  //       listItem.innerHTML = `
+  //         <ul>
+  //           <li><strong>HTML:</strong> <code>${escapeHtml(node.html)}</code></li>
+  //           <li><strong>Target:</strong> ${node.target.join(' > ')}</li>
+  //         </ul>
+  //       `;
+  //       dialogViolationsList.appendChild(listItem);
+  //     });
 
-      dialog.showModal();
-    });
-  });
+  //     dialog.showModal();
+  //   });
+  // });
 
-  // Event listener for the close dialog button
-  dialog.querySelector('.dialog-violations__close').addEventListener('click', () => {
-    document.querySelector('.dialog-violations').close();
-  });
+  // // Event listener for the close dialog button
+  // dialog.querySelector('.dialog-violations__close').addEventListener('click', () => {
+  //   document.querySelector('.dialog-violations').close();
+  // });
 
 });

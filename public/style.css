@@ -1,5 +1,5 @@
 :root {
-  --color-primary: #095dff;
+  --color-primary: #0a3d86;
   --color-white: #ffffff;
   --spacing: 1rem;
   --color-grey-lightest: #f2f2f2;
@@ -86,6 +86,11 @@ header.bg nav a:focus-visible {
   transform: scale(1.01);
 }
 
+header .logo {
+  width: 250px;
+  max-width: 100%;
+}
+
 .impact {
   padding: 0.15rem;
   border: var(--border);
@@ -107,80 +112,39 @@ header.bg nav a:focus-visible {
   background-color: #dc0000;
 }
 
-dialog::backdrop {
-  background-color: var(--color-primary);
-  opacity: 0.9;
-}
-
-dialog {
-  width: 90%;
-  height: 90%;
-  max-width: 900px;
-  max-height: 600px;
-  padding: 2rem;
-  background-color: var(--color-white);
-  border: var(--border);
-}
-
-.dialog-violations__close {
-  display: block;
-  margin-inline-start: auto;
-}
-
-.dialog-violations__title {
-  margin-block-start: 2rem;
-  padding-block-start: 1rem;
-  border-block-start: var(--border);
-}
-
-.dialog-violations__list {
-  padding-block-start: 2rem;
-  margin-block-start: 2rem;
-  border-block-start: var(--border);
-}
-
-.dialog-violations__list > li {
-  margin-block-end: 2rem;
-  padding-block-end: 2rem;
-  border-bottom: var(--border);
-}
-
-.dialog-violations__list > li li {
-  list-style-type: disc;
-  margin-block-start: 0.5rem;
-}
-
-button {
-  padding: 0.25rem 0.5rem;
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: var(--border);
-}
-button:focus-visible,
-button:hover {
-  background-color: var(--color-white);
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-}
 
 .violations {
+  max-width: 120ch;
   width: 100%;
-  aspect-ratio: 1;
   padding: 1rem;
-  overflow: auto;
   background-color: var(--color-grey-lightest);
-  border: var(--border);
+  /* border: var(--border); */
+  border-radius: 1rem;;
 }
 
 .violations__list > li {
   margin-block-end: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
 }
 .violations__list > li li {
   margin-block-start: 0.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dotted;
+}
+
+.violations__list details > p {
+    background: #000;
+    padding: 1rem;
+    color: #fff;
+    border-radius: 1rem;
 }
 
 .grid {
   display: grid;
   gap: var(--spacing);
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  /* grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); */
+  grid-template-columns: 1fr;
 }
